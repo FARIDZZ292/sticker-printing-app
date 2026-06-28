@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StickerPrint - Pemesanan Jasa Cetak Stiker Online</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-wrapper">
+    <div class="auth-card glass-panel animate-slide-up">
+      <div class="auth-header">
+        <div class="auth-logo">Sticker<span>Print</span></div>
+        <p class="auth-subtitle" id="auth-sub">Sistem Informasi Pemesanan Jasa Cetak Stiker</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert-container"></div>
+
+      <!-- FORM LOGIN -->
+      <form id="login-form">
+        <h3 style="margin-bottom: 20px; color: #fff;">Masuk ke Akun</h3>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input type="email" id="login-email" class="form-input" placeholder="contoh@domain.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          Login Sekarang
+        </button>
+
+        <div class="auth-footer" style="margin-top: 20px; color: #cbd5e1; font-size: 0.9rem; text-align: center;">
+          Masuk dengan akun admin atau pelanggan Anda.
+        </div>
+
+        <div class="auth-footer">
+          Belum punya akun? <a href="#" id="show-register">Daftar Akun Baru</a>
+        </div>
+      </form>
+
+      <!-- FORM REGISTRASI -->
+      <form id="register-form" style="display: none;">
+        <h3 style="margin-bottom: 20px; color: #fff;">Registrasi Pelanggan</h3>
+        <div class="form-group">
+          <label class="form-label" for="reg-nama">Nama Lengkap</label>
+          <input type="text" id="reg-nama" class="form-input" placeholder="Nama lengkap Anda" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Email</label>
+          <input type="email" id="reg-email" class="form-input" placeholder="contoh@domain.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Password</label>
+          <input type="password" id="reg-password" class="form-input" placeholder="Buat password minimal 6 karakter" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-phone">No. Telepon / WhatsApp</label>
+          <input type="text" id="reg-phone" class="form-input" placeholder="Contoh: 0812xxxxxxxx" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-alamat">Alamat Lengkap</label>
+          <textarea id="reg-alamat" class="form-input" placeholder="Alamat pengiriman stiker" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 10px;">
+          Daftar Sekarang
+        </button>
+        <div class="auth-footer">
+          Sudah punya akun? <a href="#" id="show-login">Masuk disini</a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    (function() {
+      // Logika pertukaran Form Login & Registrasi
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const showRegister = document.getElementById('show-register');
+      const showLogin = document.getElementById('show-login');
+      const authSub = document.getElementById('auth-sub');
+
+      showRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        authSub.textContent = 'Daftarkan diri untuk memesan cetakan stiker Anda';
+        clearAlerts();
+      });
+
+      showLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        authSub.textContent = 'Sistem Informasi Pemesanan Jasa Cetak Stiker';
+        clearAlerts();
+      });
+
+      function clearAlerts() {
+        document.getElementById('alert-container').innerHTML = '';
+      }
+
+      // Proteksi: Jika sudah login, langsung alihkan ke dashboard masing-masing
+      const token = localStorage.getItem('token');
+      const userJson = localStorage.getItem('user');
+      if (token && userJson) {
+        try {
+          const user = JSON.parse(userJson);
+          if (user.role === 'admin') {
+            window.location.href = 'dashboard-admin.html';
+          } else {
+            window.location.href = 'dashboard-pelanggan.html';
+          }
+        } catch(e) {
+          localStorage.clear();
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

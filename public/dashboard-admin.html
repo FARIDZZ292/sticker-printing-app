@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - StickerPrint</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <div class="navbar-brand">
+        Sticker<span>Print</span> <span style="font-size: 0.8rem; background: var(--primary); color: #fff; padding: 2px 8px; border-radius: 4px; margin-left: 10px;">ADMIN</span>
+      </div>
+      <div class="navbar-nav">
+        <div class="navbar-search">
+          <input type="search" placeholder="Cari data, pesanan, atau pelanggan..." id="admin-search-input" class="form-input" />
+        </div>
+        <div class="navbar-user-info">
+          <img id="nav-avatar" class="user-avatar" src="images/profile-paridisan.svg" alt="Profil Admin" />
+          <div class="user-details">
+            <span class="user-name" id="nav-username">paridisan150@gmail.com</span>
+            <span class="user-role">Administrator Sistem</span>
+          </div>
+        </div>
+        <button id="logout-btn" class="btn btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- DASHBOARD CONTENT -->
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active" id="tab-menu-stats">
+          <a href="#" onclick="switchTab('stats')">📊 Dashboard Utama</a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-produk">
+          <a href="#" onclick="switchTab('produk')">🛍️ Kelola Produk</a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-pesanan">
+          <a href="#" onclick="switchTab('pesanan')">📋 Kelola Pesanan</a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-chat">
+          <a href="#" onclick="switchTab('chat')">💬 Chat Pelanggan <span id="admin-chat-count" class="chat-badge" style="display:none;">0</span></a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-pelanggan">
+          <a href="#" onclick="switchTab('pelanggan')">👥 Daftar Pelanggan</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- ================= SECTION STATS ================= -->
+      <section id="section-stats" class="animate-fade-in">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Ringkasan Bisnis Percetakan</h2>
+            <p>Ikhtisar performa penjualan, jumlah pesanan, dan aset produk saat ini.</p>
+          </div>
+          <button class="btn btn-primary no-print" onclick="window.print()">🖨️ Cetak Laporan</button>
+        </div>
+
+        <div class="dashboard-hero glass-panel">
+          <div class="hero-copy">
+            <span class="hero-eyebrow">Admin Control Center</span>
+            <h3>Dashboard Operasional StickerPrint</h3>
+            <p>Kelola pesanan, produk, pelanggan, dan obrolan support dengan tampilan modern yang jelas dan responsif.</p>
+          </div>
+          <div class="hero-chart-card">
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <span>Pendapatan</span>
+                <strong>Rp 45,2J</strong>
+              </div>
+              <div class="chart-line"></div>
+            </div>
+            <div class="chart-card small-card">
+              <span>Total View</span>
+              <strong>3.456K</strong>
+            </div>
+            <div class="chart-card small-card">
+              <span>Total Produk</span>
+              <strong>2.450</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card glass-panel">
+            <div class="stat-info">
+              <h4>Total Pendapatan</h4>
+              <p id="stat-revenue">Rp 0</p>
+            </div>
+            <div class="stat-icon success">💰</div>
+          </div>
+          
+          <div class="stat-card glass-panel">
+            <div class="stat-info">
+              <h4>Total Transaksi</h4>
+              <p id="stat-orders">0</p>
+            </div>
+            <div class="stat-icon primary">📦</div>
+          </div>
+
+          <div class="stat-card glass-panel">
+            <div class="stat-info">
+              <h4>Total Varian Stiker</h4>
+              <p id="stat-products">0</p>
+            </div>
+            <div class="stat-icon warning">🏷️</div>
+          </div>
+
+          <div class="stat-card glass-panel">
+            <div class="stat-info">
+              <h4>Total Pelanggan</h4>
+              <p id="stat-customers">0</p>
+            </div>
+            <div class="stat-icon danger">👥</div>
+          </div>
+        </div>
+
+        <!-- RECENT ACTIVITY OR DETAILS -->
+        <div class="glass-panel section-card">
+          <h3 class="section-title">Aktivitas Pemesanan Terkini</h3>
+          <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Menampilkan daftar pesanan terbaru yang butuh diproses segera.</p>
+          
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Pelanggan</th>
+                  <th>Kontak</th>
+                  <th>Bahan Stiker</th>
+                  <th>Kuantitas</th>
+                  <th>Total Harga</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-list">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted);">Memuat riwayat aktivitas...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION PRODUK ================= -->
+      <section id="section-produk" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Manajemen Produk Stiker</h2>
+            <p>Tambahkan jenis stiker baru, perbarui harga lembaran, atau hapus produk.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openProductModal('add')">➕ Tambah Stiker Baru</button>
+        </div>
+
+        <div class="glass-panel section-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama Varian Stiker</th>
+                  <th>Deskripsi Spesifikasi</th>
+                  <th>Harga / Pcs</th>
+                  <th>Minimal Order</th>
+                  <th style="text-align: center;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-list">
+                <!-- Diisi otomatis oleh JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION PESANAN ================= -->
+      <section id="section-pesanan" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Daftar Semua Pesanan Transaksi</h2>
+            <p>Ubah status pengerjaan pesanan stiker pelanggan dari Pending, Diproses, Selesai, atau Batal.</p>
+          </div>
+        </div>
+
+        <div class="glass-panel section-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID Pesanan</th>
+                  <th>Tanggal</th>
+                  <th>Nama Pelanggan</th>
+                  <th>Jenis Stiker</th>
+                  <th>Ukuran</th>
+                  <th>Jumlah</th>
+                  <th>Total Bayar</th>
+                  <th>Catatan</th>
+                  <th>Desain</th>
+                  <th>Bukti Bayar</th>
+                  <th>Status Saat Ini</th>
+                  <th style="text-align: center;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-list">
+                <!-- Diisi otomatis oleh JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION CHAT ================= -->
+      <section id="section-chat" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Chat Pelanggan</h2>
+            <p>Tanggapi pesan pelanggan secara real-time dari dashboard admin.</p>
+          </div>
+        </div>
+
+        <div class="chat-panel glass-panel admin-chat-panel">
+          <aside class="chat-conversation-list" id="admin-chat-conversations">
+            <div class="chat-list-header">
+              <h4>Daftar Percakapan</h4>
+              <p style="color: var(--text-muted); font-size:0.85rem;">Pilih pelanggan untuk melihat chat.</p>
+            </div>
+            <div class="chat-list-items" id="admin-chat-list-items">
+              <div class="chat-empty">Memuat percakapan...</div>
+            </div>
+          </aside>
+          <div class="chat-thread" id="admin-chat-thread">
+            <div class="chat-header">
+              <div>
+                <h3 id="admin-chat-title">Pilih pelanggan</h3>
+                <p id="admin-chat-status" style="font-size:0.85rem; color:var(--text-muted);">Belum ada percakapan yang dibuka.</p>
+              </div>
+            </div>
+            <div class="chat-messages" id="admin-chat-messages">
+              <div class="chat-empty">Pilih percakapan untuk mulai membalas pesan.</div>
+            </div>
+            <form id="admin-chat-form" class="chat-input-row" style="display:none;">
+              <textarea id="admin-chat-input" class="form-input" rows="2" placeholder="Ketik balasan..." required></textarea>
+              <button type="submit" class="btn btn-primary">Kirim</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION PELANGGAN ================= -->
+      <section id="section-pelanggan" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Daftar Pelanggan Terdaftar</h2>
+            <p>Informasi profil pelanggan yang terdaftar dalam sistem cetak stiker.</p>
+          </div>
+        </div>
+
+        <div class="glass-panel section-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID Pelanggan</th>
+                  <th>Nama Lengkap</th>
+                  <th>Email</th>
+                  <th>No. Telepon / WA</th>
+                  <th>Alamat Pengiriman</th>
+                  <th>Terdaftar Pada</th>
+                </tr>
+              </thead>
+              <tbody id="admin-customers-list">
+                <!-- Diisi otomatis oleh JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL ADD/EDIT PRODUK -->
+  <div class="modal" id="product-modal">
+    <div class="modal-content glass-panel">
+      <div class="modal-header">
+        <h3 class="modal-title" id="product-modal-title">Tambah Produk Stiker</h3>
+        <button class="modal-close" onclick="closeProductModal()">&times;</button>
+      </div>
+      
+      <form id="product-form">
+        <input type="hidden" id="product-id-input">
+        
+        <div class="form-group">
+          <label class="form-label" for="prod-name">Nama Varian Stiker</label>
+          <input type="text" id="prod-name" class="form-input" placeholder="Contoh: Stiker Vinyl Doff A3+" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="prod-desc">Deskripsi Bahan & Spesifikasi</label>
+          <textarea id="prod-desc" class="form-input" placeholder="Contoh: Anti air, permukaan doff, tebal, isi sekitar 20-50 pcs tergantung ukuran potong." rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="prod-price">Harga Satuan (Rp)</label>
+          <input type="number" id="prod-price" class="form-input" placeholder="12000" min="100" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="prod-min">Minimal Pemesanan (Pcs)</label>
+          <input type="number" id="prod-min" class="form-input" placeholder="5" min="1" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Batal</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-product">Simpan Produk</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Proteksi Halaman: Wajib Login & role admin
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    if (!token || user.role !== 'admin') {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+
+    // Set Info User di Nav
+    document.getElementById('nav-username').textContent = 'paridisan150@gmail.com';
+    document.getElementById('nav-avatar').src = 'images/profile-paridisan.svg';
+
+    // Switch tabs
+    function switchTab(tab) {
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      document.getElementById('section-stats').style.display = 'none';
+      document.getElementById('section-produk').style.display = 'none';
+      document.getElementById('section-pesanan').style.display = 'none';
+      document.getElementById('section-pelanggan').style.display = 'none';
+
+      if (tab === 'stats') {
+        document.getElementById('tab-menu-stats').classList.add('active');
+        document.getElementById('section-stats').style.display = 'block';
+        loadAdminStats();
+      } else if (tab === 'produk') {
+        document.getElementById('tab-menu-produk').classList.add('active');
+        document.getElementById('section-produk').style.display = 'block';
+        loadAdminProducts();
+      } else if (tab === 'pesanan') {
+        document.getElementById('tab-menu-pesanan').classList.add('active');
+        document.getElementById('section-pesanan').style.display = 'block';
+        loadAdminOrders();
+      } else if (tab === 'chat') {
+        document.getElementById('tab-menu-chat').classList.add('active');
+        document.getElementById('section-chat').style.display = 'block';
+        loadAdminChatConversations();
+      } else if (tab === 'pelanggan') {
+        document.getElementById('tab-menu-pelanggan').classList.add('active');
+        document.getElementById('section-pelanggan').style.display = 'block';
+        loadAdminCustomers();
+      }
+    }
+
+    // Initial Load stats on dashboard open
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAdminStats();
+    });
+  </script>
+</body>
+</html>

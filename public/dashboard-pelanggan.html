@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Pelanggan - StickerPrint</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <div class="navbar-brand">
+        Sticker<span>Print</span>
+      </div>
+      <div class="navbar-nav">
+        <div class="navbar-user-info">
+          <div class="user-avatar" id="nav-avatar">U</div>
+          <div class="user-details">
+            <span class="user-name" id="nav-username">Pelanggan</span>
+            <span class="user-role">Pelanggan Percetakan</span>
+          </div>
+        </div>
+        <button id="logout-btn" class="btn btn-secondary btn-sm" style="margin-left: 10px;">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- DASHBOARD CONTENT -->
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active" id="tab-menu-produk">
+          <a href="#" onclick="switchTab('produk')">🛍️ Katalog Produk</a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-riwayat">
+          <a href="#" onclick="switchTab('riwayat')">📋 Riwayat Pesanan</a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-chat">
+          <a href="#" onclick="switchTab('chat')">💬 Chat Admin <span id="chat-notice" class="chat-badge" style="display:none;">0</span></a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-notifications">
+          <a href="#" onclick="switchTab('notifications')">🔔 Notifikasi <span id="notif-badge" class="chat-badge" style="display:none;">0</span></a>
+        </li>
+        <li class="sidebar-item" id="tab-menu-support">
+          <a href="#" onclick="switchTab('support')">🎫 Bantuan & Tiket</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- MAIN MAIN CONTENT -->
+    <main class="main-content">
+      
+      <!-- TAB KATALOG PRODUK -->
+      <section id="section-produk" class="animate-fade-in">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Katalog Cetak Stiker</h2>
+            <p>Pilih bahan stiker terbaik atau pesan desain kustom sesuai kebutuhan Anda.</p>
+          </div>
+        </div>
+
+        <div class="catalog-controls">
+          <input id="product-search-input" class="form-input search-input" type="search" placeholder="Cari produk stiker, bahan, atau gaya..." oninput="filterProducts()">
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="category-tabs" id="category-tabs">
+          <button class="cat-tab active" onclick="filterCategory('semua')" id="cat-semua">🏷️ Semua</button>
+          <button class="cat-tab" onclick="filterCategory('vinyl')" id="cat-vinyl">✨ Vinyl Premium</button>
+          <button class="cat-tab" onclick="filterCategory('kertas')" id="cat-kertas">📄 Kertas</button>
+          <button class="cat-tab" onclick="filterCategory('custom')" id="cat-custom">🎨 Stiker Kustom</button>
+        </div>
+
+        <div id="product-list" class="product-grid-shop">
+          <!-- Diisi otomatis oleh JavaScript -->
+          <div style="color: var(--text-muted); text-align: center; padding: 40px 0; grid-column: 1/-1;">
+            <div style="font-size: 2rem;">🔄</div>
+            <p style="margin-top: 8px;">Memuat katalog produk...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB RIWAYAT PESANAN -->
+      <section id="section-riwayat" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Riwayat Pemesanan Anda</h2>
+            <p>Pantau perkembangan cetakan stiker Anda secara real-time.</p>
+          </div>
+        </div>
+
+        <div class="order-filters">
+          <input id="order-search-input" class="form-input search-input" type="search" placeholder="Cari pesanan, produk, atau status..." oninput="applyOrderHistoryFilter()">
+          <select id="order-status-filter" class="form-input" onchange="applyOrderHistoryFilter()">
+            <option value="semua">Semua Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Diproses">Diproses</option>
+            <option value="Selesai">Selesai</option>
+            <option value="Dibatalkan">Dibatalkan</option>
+          </select>
+        </div>
+
+        <div class="glass-panel section-card">
+          <div class="table-responsive">
+            <table class="data-table" id="orders-table">
+              <thead>
+                <tr>
+                  <th>No. Pesanan</th>
+                  <th>Tanggal</th>
+                  <th>Produk</th>
+                  <th>Ukuran</th>
+                  <th>Jumlah</th>
+                  <th>Harga/Pcs</th>
+                  <th>Total Bayar</th>
+                  <th>Catatan</th>
+                  <th>Desain</th>
+                  <th>Bukti Bayar</th>
+                  <th>Status</th>
+                  <th>Metode</th>
+                  <th>Pembayaran</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="orders-list">
+                <!-- Diisi otomatis oleh JavaScript -->
+                <tr>
+                  <td colspan="14" style="text-align: center; color: var(--text-muted);">Memuat data pesanan...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB CHAT ADMIN -->
+      <section id="section-chat" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Chat dengan Admin</h2>
+            <p>Kirim pesan atau tanyakan detail pesanan langsung ke admin.</p>
+          </div>
+        </div>
+
+        <div class="chat-panel glass-panel">
+          <div class="chat-header-row">
+            <div>
+              <h3>Obrolan Admin</h3>
+              <p id="chat-status-text" style="color: var(--text-muted); font-size: 0.9rem;">Muat percakapan...</p>
+            </div>
+          </div>
+          <div class="chat-messages" id="customer-chat-messages">
+            <div class="chat-empty">Belum ada pesan. Silakan kirim pertanyaan Anda kepada admin.</div>
+          </div>
+          <form id="customer-chat-form" class="chat-input-row">
+            <textarea id="customer-chat-input" class="form-input" rows="2" placeholder="Ketik pesan Anda..." required></textarea>
+            <button type="submit" class="btn btn-primary">Kirim</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="section-notifications" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Notifikasi</h2>
+            <p>Informasi terbaru tentang pesanan, pembayaran, dan pesan dari admin.</p>
+          </div>
+        </div>
+        <div class="glass-panel section-card">
+          <div id="notification-list">
+            <p style="color: var(--text-muted);">Memuat notifikasi...</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-support" class="animate-fade-in" style="display: none;">
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Bantuan & Tiket</h2>
+            <p>Kirim tiket dukungan jika Anda butuh bantuan terkait pesanan atau desain stiker.</p>
+          </div>
+        </div>
+        <div class="glass-panel section-card support-quick-card" style="margin-bottom: 24px;">
+          <h3 class="section-title">Customer Service Cepat</h3>
+          <p style="margin-bottom: 12px; color: var(--text-muted);">Butuh bantuan cepat? Gunakan chat admin, tiket dukungan, atau langsung hubungi layanan customer service kami.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:12px;">
+            <div style="flex:1; min-width:220px; background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius: 14px; padding:16px;">
+              <strong>WhatsApp CS</strong>
+              <p style="margin:6px 0 0; color: var(--text-muted);">+62 812-3456-7890</p>
+            </div>
+            <div style="flex:1; min-width:220px; background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius: 14px; padding:16px;">
+              <strong>Email CS</strong>
+              <p style="margin:6px 0 0; color: var(--text-muted);">cs@stickerprint.co.id</p>
+            </div>
+            <div style="flex:1; min-width:220px; background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius: 14px; padding:16px;">
+              <strong>Praktik Sekarang</strong>
+              <p style="margin:6px 0 0; color: var(--text-muted);">Kirim tiket jika pertanyaan Anda terkait pesanan atau desain.</p>
+            </div>
+          </div>
+        </div>
+        <div class="glass-panel section-card support-quick-card" style="margin-bottom: 24px;">
+          <h3 class="section-title">Customer Service Cepat</h3>
+          <p style="margin-bottom: 12px; color: var(--text-muted);">Butuh bantuan cepat? Gunakan chat admin, tiket dukungan, atau hubungi layanan kami.</p>
+          <div class="support-contact-grid">
+            <div class="support-contact-card">
+              <strong>WhatsApp CS</strong>
+              <p>+62 812-3456-7890</p>
+            </div>
+            <div class="support-contact-card">
+              <strong>Email CS</strong>
+              <p>cs@stickerprint.co.id</p>
+            </div>
+            <div class="support-contact-card">
+              <strong>Jadwal Dukungan</strong>
+              <p>Senin - Sabtu, 08:00 - 18:00</p>
+            </div>
+          </div>
+        </div>
+        <div class="glass-panel section-card" style="margin-bottom: 24px;">
+          <form id="support-ticket-form">
+            <div class="form-group">
+              <label class="form-label">Subjek Tiket</label>
+              <input type="text" id="support-subject" class="form-input" placeholder="Masukkan judul masalah Anda" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Prioritas</label>
+              <select id="support-priority" class="form-input">
+                <option value="Normal">Normal</option>
+                <option value="High">Tinggi</option>
+                <option value="Urgent">Mendesak</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pesan</label>
+              <textarea id="support-message" class="form-input" rows="4" placeholder="Jelaskan kendala atau pertanyaan Anda" required></textarea>
+            </div>
+            <div class="modal-footer" style="justify-content:flex-start; gap: 12px; padding: 0;">
+              <button type="submit" class="btn btn-primary">Kirim Tiket</button>
+              <span id="support-feedback" style="color: var(--text-muted);"></span>
+            </div>
+          </form>
+        </div>
+        <div class="glass-panel section-card">
+          <h3 class="section-title">Riwayat Tiket Anda</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID Tiket</th>
+                  <th>Subjek</th>
+                  <th>Status</th>
+                  <th>Prioritas</th>
+                  <th>Diperbarui</th>
+                </tr>
+              </thead>
+              <tbody id="customer-tickets-list">
+                <tr><td colspan="5" style="text-align:center; color: var(--text-muted);">Belum ada tiket dukungan.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL PEMESANAN STIKER -->
+  <div class="modal" id="order-modal">
+    <div class="modal-content glass-panel">
+      <div class="modal-header">
+        <h3 class="modal-title">Formulir Pemesanan Stiker</h3>
+        <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+      </div>
+      
+      <form id="order-form">
+        <input type="hidden" id="order-product-id">
+        
+        <div class="form-group">
+          <label class="form-label">Jenis Stiker</label>
+          <input type="text" id="order-product-name" class="form-input" disabled style="background: rgba(255,255,255,0.05); color: #fff;">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" id="label-min-order">Jumlah Pesanan (Pcs)</label>
+          <input type="number" id="order-qty" class="form-input" min="1" required oninput="calculateTotalOrder()">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label">Panjang Stiker (cm)</label>
+            <input type="number" id="order-panjang" class="form-input" min="1" max="100" step="0.1" value="5" required oninput="calculateTotalOrder()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lebar Stiker (cm)</label>
+            <input type="number" id="order-lebar" class="form-input" min="1" max="100" step="0.1" value="5" required oninput="calculateTotalOrder()">
+          </div>
+        </div>
+
+        <div class="form-group" style="display:grid; gap: 12px;">
+          <label class="form-label">Kupon Diskon</label>
+          <div style="display:flex; gap: 10px; align-items:center; flex-wrap:wrap;">
+            <input type="text" id="order-coupon-code" class="form-input" placeholder="Masukkan kode kupon jika ada">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyCouponCode()">Cek Kupon</button>
+          </div>
+          <p id="coupon-feedback" style="color: var(--text-muted); margin-top: 0; font-size:0.9rem;">Masukkan kode kupon untuk mendapat diskon.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Metode Pembayaran</label>
+          <select id="order-payment-method" class="form-input">
+            <option value="Transfer Bank">Transfer Bank</option>
+            <option value="Gopay">Gopay</option>
+            <option value="OVO">OVO</option>
+            <option value="Cash">Cash / Tunai</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Unggah File Desain (PNG/JPG/PDF/ZIP)</label>
+          <input type="file" id="order-file" class="form-input" accept=".png,.jpg,.jpeg,.pdf,.zip" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="order-notes">Catatan & Keterangan Desain</label>
+          <textarea id="order-notes" class="form-input" placeholder="Contoh: Potong setengah lingkaran diameter 6cm, laminasi doff." rows="3"></textarea>
+        </div>
+
+        <!-- Order Summary Box -->
+        <div class="order-summary-box">
+          <div class="summary-row">
+            <span>Harga per Lembar/Pcs</span>
+            <span id="summary-price-pcs">Rp 0</span>
+          </div>
+          <div class="summary-row">
+            <span>Jumlah</span>
+            <span id="summary-qty">0 pcs</span>
+          </div>
+          <div class="summary-row">
+            <span>Diskon Kupon</span>
+            <span id="summary-discount">-</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total Bayar</span>
+            <span id="summary-total" style="font-weight: 700; color: var(--primary);">Rp 0</span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeOrderModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Konfirmasi & Pesan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL UPLOAD BUKTI PEMBAYARAN -->
+  <div class="modal" id="bukti-modal">
+    <div class="modal-content glass-panel" style="max-width: 450px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Upload Bukti Pembayaran</h3>
+        <button class="modal-close" onclick="closeBuktiModal()">&times;</button>
+      </div>
+      
+      <form id="bukti-form">
+        <input type="hidden" id="bukti-order-id">
+        
+        <div class="form-group">
+          <label class="form-label">Pilih Gambar Bukti Transfer (JPG/PNG)</label>
+          <input type="file" id="bukti-file" class="form-input" accept=".png,.jpg,.jpeg" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeBuktiModal()">Batal</button>
+          <button type="submit" class="btn btn-success">Kirim Bukti</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Proteksi Halaman: Wajib Login & role pelanggan
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    if (!token || user.role !== 'pelanggan') {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+
+    // Set Info User di Nav
+    document.getElementById('nav-username').textContent = user.nama || 'Pelanggan';
+    document.getElementById('nav-avatar').textContent = (user.nama || 'P').charAt(0).toUpperCase();
+
+    // Fungsi Switch Tab Sidebar
+    function switchTab(tab) {
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      document.getElementById('section-produk').style.display = 'none';
+      document.getElementById('section-riwayat').style.display = 'none';
+      document.getElementById('section-chat').style.display = 'none';
+      document.getElementById('section-notifications').style.display = 'none';
+      document.getElementById('section-support').style.display = 'none';
+
+      if (tab === 'produk') {
+        document.getElementById('tab-menu-produk').classList.add('active');
+        document.getElementById('section-produk').style.display = 'block';
+        loadProducts();
+      } else if (tab === 'riwayat') {
+        document.getElementById('tab-menu-riwayat').classList.add('active');
+        document.getElementById('section-riwayat').style.display = 'block';
+        loadCustomerOrders();
+      } else if (tab === 'chat') {
+        document.getElementById('tab-menu-chat').classList.add('active');
+        document.getElementById('section-chat').style.display = 'block';
+        loadCustomerChat();
+      } else if (tab === 'notifications') {
+        document.getElementById('tab-menu-notifications').classList.add('active');
+        document.getElementById('section-notifications').style.display = 'block';
+        loadNotifications();
+      } else if (tab === 'support') {
+        document.getElementById('tab-menu-support').classList.add('active');
+        document.getElementById('section-support').style.display = 'block';
+        loadSupportTickets();
+      }
+    }
+
+    // Fungsi Pembayaran Modal
+    function openBuktiModal(id) {
+      document.getElementById('bukti-order-id').value = id;
+      document.getElementById('bukti-file').value = '';
+      document.getElementById('bukti-modal').classList.add('active');
+    }
+    
+    function closeBuktiModal() {
+      document.getElementById('bukti-modal').classList.remove('active');
+    }
+
+    // Inisialisasi awal load produk
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProducts();
+      loadCustomerChatUnread();
+      loadNotifications();
+    });
+  </script>
+</body>
+</html>
