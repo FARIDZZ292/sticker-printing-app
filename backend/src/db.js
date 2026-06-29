@@ -1,11 +1,16 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
+const isVercel = process.env.VERCEL === '1' || process.env.NOW_BUILDER;
+const databaseName = isVercel
+  ? (process.env.DB_NAME === 'cetak_stiker' || !process.env.DB_NAME ? 'defaultdb' : process.env.DB_NAME)
+  : (process.env.DB_NAME || 'cetak_stiker');
+
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
   user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
   password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '',
-  database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'cetak_stiker',
+  database: databaseName,
   port: parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306'),
   waitForConnections: true,
   connectionLimit: 10,
