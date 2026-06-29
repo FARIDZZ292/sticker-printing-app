@@ -13,9 +13,10 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_sticker_printing_key_987654321';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-// Pastikan folder uploads ada
-const uploadDesainDir = path.join(__dirname, 'uploads', 'desain');
-const uploadPembayaranDir = path.join(__dirname, 'uploads', 'pembayaran');
+// Pastikan folder uploads ada (gunakan /tmp di lingkungan serverless Vercel)
+const isVercel = process.env.VERCEL === '1' || process.env.NOW_BUILDER;
+const uploadDesainDir = isVercel ? path.join('/tmp', 'uploads', 'desain') : path.join(__dirname, 'uploads', 'desain');
+const uploadPembayaranDir = isVercel ? path.join('/tmp', 'uploads', 'pembayaran') : path.join(__dirname, 'uploads', 'pembayaran');
 if (!fs.existsSync(uploadDesainDir)) fs.mkdirSync(uploadDesainDir, { recursive: true });
 if (!fs.existsSync(uploadPembayaranDir)) fs.mkdirSync(uploadPembayaranDir, { recursive: true });
 
@@ -42,7 +43,7 @@ const uploadPembayaran = multer({ storage: storagePembayaran, limits: { fileSize
 // Middleware
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(isVercel ? '/tmp/uploads' : path.join(__dirname, 'uploads')));
 
 // ==========================================
 // ADMIN ACCOUNT BOOTSTRAP
@@ -670,7 +671,11 @@ app.get('/api/admin/customers', verifyToken, verifyAdmin, async (req, res) => {
 // ==========================================
 // START SERVER
 // ==========================================
-app.listen(PORT, () => {
-  console.log(`🚀 Server backend berjalan di http://localhost:${PORT}`);
-  console.log(`📡 API tersedia di http://localhost:${PORT}/api`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server backend berjalan di http://localhost:${PORT}`);
+    console.log(`📡 API tersedia di http://localhost:${PORT}/api`);
+  });
+}
+
+module.exports = app;
